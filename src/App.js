@@ -1,26 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React  from "react";
+import Header from "./components/Header";
+import Main from "./components/Main";
+import Footer from "./components/Footer";
+import './components/styles/App.css'
 
 const App = () =>{
-  const [collectedNumber, setCollectedNumber] = useState([]);
-  const [text, setText] = useState('Change');
-  const addNumber = () =>{
-    setCollectedNumber(collectedNumber.concat('1'));
-    console.log(collectedNumber);
 
-    setText('Changed');
-  }
-  /*
-  useEffect(()=>{
-
-
-    return () =>{
-    };
-  },[]);
-*/
   return(
-    <div>
-      <button onClick={addNumber}>{text}</button>
-    </div>
+    <>
+      <Header/>
+      <Main/>
+      <Footer/>
+    </>
   );
 };
 

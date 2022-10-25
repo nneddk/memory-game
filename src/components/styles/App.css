@@ -1,0 +1,26 @@
+html,body{
+    margin: 0;
+    height:100%;
+    font-size: 15px;
+}
+
+#header{
+    color: white;
+    height: 8vh;
+
+    display:flex;
+    align-items: center;
+    
+    padding-left: 1em;
+    background-color:black;
+}
+#main{
+    height: 90vh;
+}
+#footer{
+    color:white;
+    height: 2vh;
+
+    padding-left: 1em;
+    background-color: black;
+}

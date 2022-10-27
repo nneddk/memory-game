@@ -1,0 +1,44 @@
+
+.start-game-screen{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    gap: 1.6rem;
+    width:100%;
+}
+.best-score{
+    font-family: 'Fredoka One', cursive; 
+    color:white;
+    font-size: 3.2rem;
+    text-align: center;
+    width:80%;
+    z-index: 1;
+    text-shadow: 0.4rem 0.4rem rgb(0,0,0,0.5);
+}
+.start-game-desc{
+    font-family: 'Fredoka One', cursive; 
+    color:white;
+    font-size: 1.8rem;
+    text-align: center;
+    width:80%;
+    z-index: 1;
+}
+.start-game-btn{
+    font-family: 'Fredoka One', cursive; 
+    color:white;
+
+    padding: 0.8rem;
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+    border-radius: 9999px;
+    font-size: 1.8rem;
+    background-color: transparent;
+
+    border: solid 0.4rem black;
+    transition: all 0.3s;
+}
+.start-game-btn:hover{
+    background-color: black;
+}

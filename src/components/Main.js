@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 const randomWords = require('random-words');
 let randomWordArray = randomWords(50);
+let bestScore = 0;
+
 
 //Durstenfeld Shuffle
 function shuffleArray(array) {
@@ -31,26 +33,30 @@ const Main = () =>{
         
 
         const cardClick = (e) =>{
-            let value = e.target.innerHTML;
             
+            let value = e.target.innerHTML;
             if (!selectedCards.includes(value)){
-                if(score === 10){
-                    console.log('win state');
-                }
                 setScore(score + 1);
                 //lazy way to do this
                 setSelectedCards(selectedCards.concat(value));
                 setCurrentCards(currentCards + 1);
                 cardData = shuffleArray(cardData);
             }else{
-                console.log('lose state');
+                if(score>bestScore) bestScore = score;
                 startGame();
+                
             }
+            
         }
         
         const children = cardData.map((val)=>(
             React.createElement('button', {className: 'memory-card', key: val["key"], onClick: cardClick}, val['name'])
         ));
+
+        if(score === 3){
+            bestScore = score;
+            startGame();
+        }
         return children;
       }
 
@@ -63,13 +69,13 @@ const Main = () =>{
       const currentScore = React.createElement('div', {key: 'score', className: 'current-score'}, score);
       const startGameInstructions = React.createElement('div', {key: 'startGameDesc', className: 'start-game-desc'}, startGameDesc);
       const startGameBtn = React.createElement('button', {key: 'startGameBtn', className: 'start-game-btn', onClick: startGame, type: 'button'}, 'Start Game');
-     
-      let children = isGameReady?[currentScore, createMemoryCard(currentCards)]:[startGameInstructions, startGameBtn];
+      const showBestScore =  React.createElement('div', {key: 'showBestScore', className: 'best-score'}, 'Your Best Score is: '+bestScore);
+      let children = isGameReady?[currentScore, createMemoryCard(currentCards)]:[showBestScore,startGameInstructions, startGameBtn];
     
   useEffect(()=>{
     
+    
     return () =>{
-        console.log('render');
         setCurrentCards(5);
         setSelectedCards([]);
         setScore(0);
@@ -78,7 +84,7 @@ const Main = () =>{
     
   },[isGameReady]);
   return(
-    <div>   
+    <div>
         {React.createElement('div', {id: 'main'},children)}
     </div>
     

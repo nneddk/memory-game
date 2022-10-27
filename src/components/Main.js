@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
+import './styles/startGameScreen.css';
+import './styles/playGameScreen.css';
+
+
 const randomWords = require('random-words');
 let randomWordArray = randomWords(50);
-let bestScore = 0;
 
+let bestScore = JSON.parse(localStorage.getItem("best-score") || "[0]");;
 
 //Durstenfeld Shuffle
 function shuffleArray(array) {
@@ -39,12 +43,15 @@ const Main = () =>{
                 setScore(score + 1);
                 //lazy way to do this
                 setSelectedCards(selectedCards.concat(value));
-                setCurrentCards(currentCards + 1);
+                if(currentCards < 50){
+                    setCurrentCards(currentCards + 1);
+                }
                 cardData = shuffleArray(cardData);
             }else{
-                if(score>bestScore) bestScore = score;
-                startGame();
                 
+                if(score>bestScore) bestScore = score;
+                localStorage.setItem("best-score",JSON.stringify(score));
+                startGame();     
             }
             
         }
@@ -53,8 +60,9 @@ const Main = () =>{
             React.createElement('button', {className: 'memory-card', key: val["key"], onClick: cardClick}, val['name'])
         ));
 
-        if(score === 3){
+        if(score === 50){
             bestScore = score;
+            localStorage.setItem("best-score",JSON.stringify(score));
             startGame();
         }
         return children;
@@ -64,17 +72,28 @@ const Main = () =>{
         setIsGameReady(!isGameReady);
       }
 
-      let startGameDesc = 'test';
+      const startGameScreen = () =>{
+        let startGameDesc = "Rule: Don't click on the same word twice";
+        const showBestScore =  React.createElement('div', {key: 'showBestScore', className: 'best-score'}, 'Your Best Score is: '+bestScore);
+        const startGameInstructions = React.createElement('div', {key: 'startGameDesc', className: 'start-game-desc'}, startGameDesc);
+        const startGameBtn = React.createElement('button', {key: 'startGameBtn', className: 'start-game-btn', onClick: startGame, type: 'button'}, 'Start Game');
+        const startGameScreen = React.createElement('div',{key:'start-game-screen', className: 'start-game-screen'},[showBestScore, startGameInstructions, startGameBtn]);
+        return startGameScreen;
+      }
 
-      const currentScore = React.createElement('div', {key: 'score', className: 'current-score'}, score);
-      const startGameInstructions = React.createElement('div', {key: 'startGameDesc', className: 'start-game-desc'}, startGameDesc);
-      const startGameBtn = React.createElement('button', {key: 'startGameBtn', className: 'start-game-btn', onClick: startGame, type: 'button'}, 'Start Game');
-      const showBestScore =  React.createElement('div', {key: 'showBestScore', className: 'best-score'}, 'Your Best Score is: '+bestScore);
-      let children = isGameReady?[currentScore, createMemoryCard(currentCards)]:[showBestScore,startGameInstructions, startGameBtn];
+      const playGameScreen = () =>{
+        const currentScore = React.createElement('div', {key: 'score', className: 'current-score'}, 'Current Score: '+score);
+        const memoryCards = React.createElement('div', {key: 'memoryCards', className: 'memory-card-grid'}, createMemoryCard(currentCards));
+        const playGameScreen = React.createElement('div',{key:'playGameScreen', className: 'play-game-screen'},[currentScore, memoryCards]);
+        
+        return playGameScreen;
+        
+      }
+      
+      let children = isGameReady?playGameScreen():startGameScreen();
+      
     
   useEffect(()=>{
-    
-    
     return () =>{
         setCurrentCards(5);
         setSelectedCards([]);
@@ -84,9 +103,7 @@ const Main = () =>{
     
   },[isGameReady]);
   return(
-    <div>
-        {React.createElement('div', {id: 'main'},children)}
-    </div>
+    React.createElement('div', {id: 'main'},children)
     
   );
 };

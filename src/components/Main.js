@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 const randomWords = require('random-words');
 let randomWordArray = randomWords(50);
+
 const Main = () =>{
     const [currentCards, setCurrentCards] = useState(5);
     const [selectedCards, setSelectedCards] = useState([]);
+    const [isGameReady, setIsGameReady] = useState(0);
     const [score, setScore] = useState(0);
     
     
@@ -34,27 +36,36 @@ const Main = () =>{
                 setCurrentCards(currentCards + 1);
                 cardData = shuffleArray(cardData);
             }else{
-                setScore(score - 1);
+                startGame();
             }
         }
         
         const children = cardData.map((val)=>(
-            React.createElement('button', {key: val["key"], onClick: cardClick}, val['name'])
+            React.createElement('button', {className: 'memory-card', key: val["key"], onClick: cardClick}, val['name'])
         ));
         return children;
       }
 
-      
+      const startGame = () =>{
+        setIsGameReady(!isGameReady);
+        console.log(isGameReady);
+      }
+
+      const startGameBtn = React.createElement('button', {className: 'start-game-btn', onClick: startGame, type: 'button'}, 'Start Game');
+      let children = isGameReady?createMemoryCard(currentCards):startGameBtn;
+    
   useEffect(()=>{
+    console.log('render');
     return () =>{
       
     };
     
-  });
+  },[isGameReady]);
   return(
     <div>
         <div id = 'score'>{score}</div>
-        {React.createElement('div', {id: 'main'}, createMemoryCard(currentCards))}
+
+        {React.createElement('div', {id: 'main'},children)}
     </div>
     
   );
